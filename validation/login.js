@@ -1,13 +1,12 @@
 const Validator = require('validator');
 const isEmpty = require('../validation/is-empty');
 
-module.exports = function validateLogin(data){
+module.exports = function validateLoginInput(data){
     let errors = {};
 
-    data.name = !isEmpty(data.name) ? data.name : '';
     data.email = !isEmpty(data.email) ? data.email : '';
     data.password = !isEmpty(data.password) ? data.password : '';
-    data.password2 = !isEmpty(data.password2) ? data.password2 : '';
+    
     
     
     if( !Validator.isEmail(data.email)){
@@ -22,12 +21,12 @@ module.exports = function validateLogin(data){
     if( Validator.isEmpty(data.password)){
         errors.password = 'Password field is required'
     }
-    if( Validator.isEmpty(data.password2)){
-        errors.password2 = 'confirm Password field is required'
-    }
-    if(!Validator.equals(data.password, data.password2)){
-        errors.password2 = 'Passwords must match'
-    }
+    // if( Validator.isEmpty(data.password2)){
+    //     errors.password2 = 'confirm Password field is required'
+    // }
+    // if(!Validator.equals(data.password, data.password2)){
+    //     errors.password2 = 'Passwords must match'
+    // }
 
     return {
         errors,
