@@ -152,7 +152,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req,res) => {
                 Profile.findOne({ handle: profileFields.handle }).then(profile => {
                     if(profile) {
                         errors.handle = 'That handle already exists';
-                        res.status(400).json(errors);
+                        return res.status(400).json(errors);
                     }
 
                     // else - save profile
@@ -282,6 +282,24 @@ router.delete('/education/:edu_id', passport.authenticate('jwt', { session: fals
             profile.save().then(profile => res.json(profile));
         })
         .catch(err => res.status.apply(404).json(err))
+
+});
+
+
+// @route DELETE api/profile/education/:edu_id
+// @descr delete education from profile
+// @ access private
+
+router.delete('/', passport.authenticate('jwt', { session: false}) ,(req,res) => {
+
+    const loggedInUser = req.user;
+    Profile.findOneAndRemove({ user: loggedInUser.id})
+        .then(() => {
+            // if we want to delete the user as well once the profile deleted
+            User.findOneAndRemove({ _id : loggedInUser.id})
+                .then(() => res.json({ success: true}));
+
+        })
 
 });
 
